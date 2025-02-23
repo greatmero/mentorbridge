@@ -1,22 +1,20 @@
-"use client";
-import { useAuth } from "@/app/auth/authContext";
+"use client";  // Ensure this is at the top
 
-export default function AuthHome() {
-  const { user, logout } = useAuth();
+import { useContext } from "react";
+import { AuthContext } from "@/authContext"; // Adjust this if needed
+import { useRouter } from "next/navigation";
 
-  return (
-    <div>
-      <h2>Auth Home</h2>
-      {user ? (
-        <>
-          <p>Welcome, {user.email}!</p>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <p><a href="/auth/signup">Signup</a> or <a href="/auth/login">Login</a></p>
-        </>
-      )}
-    </div>
-  );
+export default function AuthPage() {
+    const { user } = useContext(AuthContext) || {}; // Prevents destructuring error
+    const router = useRouter();
+
+    if (!user) {
+        return <p>Loading...</p>;  // Safe fallback for SSR issues
+    }
+
+    return (
+        <div>
+            <h2>Welcome, {user.email}!</h2>
+        </div>
+    );
 }
